@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplex Development — We Make Weird Roblox Games</title>
+    <meta name="description" content="Simplex Development is an indie Roblox game studio. Home of CURSED CAST 🚽 [RNG FISHING] and more weird games.">
+    <meta property="og:title" content="Simplex Development">
+    <meta property="og:description" content="We make weird Roblox games that are actually good.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplexdev.dev">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0704;
+            --bg-panel: #161210;
+            --bg-card: #1e1814;
+            --green: #64f03c;
+            --green-dim: #3a8a22;
+            --green-glow: rgba(100, 240, 60, 0.15);
+            --purple: #b078ff;
+            --purple-dim: #6a3ca0;
+            --purple-glow: rgba(176, 120, 255, 0.12);
+            --rust: #5a4028;
+            --rust-light: #7a5a3a;
+            --text: #ebe0d2;
+            --text-dim: #8a7e6e;
+            --text-muted: #5a5248;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-deep);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* === BACKGROUND GRID === */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(var(--rust) 1px, transparent 1px),
+                linear-gradient(90deg, var(--rust) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === AMBIENT GLOWS === */
+        .glow-green {
+            position: fixed;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 500px;
+            background: radial-gradient(ellipse, var(--green-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-purple {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, var(--purple-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === LAYOUT === */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === NAV === */
+        nav {
+            padding: 28px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(90, 64, 40, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--green);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--green);
+        }
+
+        /* === HERO === */
+        .hero {
+            padding: 120px 0 100px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border: 1px solid var(--rust);
+            padding: 6px 18px;
+            margin-bottom: 40px;
+            animation: fadeSlideUp 0.8s ease both;
+        }
+
+        .hero h1 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(48px, 8vw, 86px);
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            animation: fadeSlideUp 0.8s ease 0.1s both;
+        }
+
+        .hero h1 .green { color: var(--green); }
+        .hero h1 .purple { color: var(--purple); }
+
+        .hero-tagline {
+            font-size: 16px;
+            color: var(--text-dim);
+            margin-top: 24px;
+            letter-spacing: 1px;
+            animation: fadeSlideUp 0.8s ease 0.2s both;
+        }
+
+        .hero-line {
+            width: 60px;
+            height: 2px;
+            margin: 32px auto 0;
+            background: linear-gradient(90deg, var(--green), var(--purple));
+            border-radius: 2px;
+            animation: fadeSlideUp 0.8s ease 0.3s both;
+        }
+
+        /* === SECTION TITLES === */
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        /* === ABOUT === */
+        .about {
+            padding: 80px 0;
+            border-top: 1px solid rgba(90, 64, 40, 0.2);
+        }
+
+        .about-text {
+            font-size: 15px;
+            color: var(--text-dim);
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        .about-text strong {
+            color: var(--text);
+        }
+
+        /* === GAMES === */
+        .games {
+            padding: 80px 0;
+            border-top: 1px solid rgba(90, 64, 40, 0.2);
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--rust);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .game-card:hover {
+            border-color: var(--green);
+            transform: translateY(-4px);
+        }
+
+        .game-card-header {
+            padding: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .game-card-info h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .game-card-info h3 .emoji {
+            font-style: normal;
+        }
+
+        .game-card-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--rust);
+            color: var(--text-dim);
+        }
+
+        .tag.live {
+            border-color: var(--green-dim);
+            color: var(--green);
+        }
+
+        .game-card-status {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--green);
+            padding: 6px 14px;
+            border: 1px solid var(--green-dim);
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .game-card-desc {
+            padding: 0 32px 28px;
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .game-card-footer {
+            padding: 16px 32px;
+            border-top: 1px solid rgba(90, 64, 40, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-card-footer span {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .game-card-footer .arrow {
+            color: var(--green);
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover .arrow {
+            transform: translateX(6px);
+        }
+
+        /* === CONNECT === */
+        .connect {
+            padding: 80px 0;
+            border-top: 1px solid rgba(90, 64, 40, 0.2);
+        }
+
+        .connect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .connect-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--rust);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: border-color 0.3s, transform 0.2s;
+        }
+
+        .connect-link:hover {
+            border-color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        .connect-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .connect-icon.roblox { background: rgba(100, 240, 60, 0.1); color: var(--green); }
+        .connect-icon.discord { background: rgba(88, 101, 242, 0.15); color: #7289da; }
+        .connect-icon.twitter { background: rgba(255, 255, 255, 0.06); color: var(--text-dim); }
+        .connect-icon.email { background: rgba(176, 120, 255, 0.1); color: var(--purple); }
+
+        .connect-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .connect-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* === FOOTER === */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(90, 64, 40, 0.2);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .footer-text .green { color: var(--green-dim); }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === MOBILE === */
+        @media (max-width: 640px) {
+            nav {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .hero {
+                padding: 80px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .game-card-header {
+                flex-direction: column;
+                padding: 24px;
+            }
+
+            .game-card-desc {
+                padding: 0 24px 20px;
+            }
+
+            .game-card-footer {
+                padding: 14px 24px;
+            }
+
+            .connect-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about, .games, .connect {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glow-green"></div>
+<div class="glow-purple"></div>
+
+<div class="container">
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-brand">Simplex Dev</a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#games">Games</a></li>
+            <li><a href="#connect">Connect</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">Roblox Game Studio</div>
+        <h1>
+            <span class="green">Simplex</span><br>
+            <span class="purple">Development</span>
+        </h1>
+        <p class="hero-tagline">We make weird games that are actually good.</p>
+        <div class="hero-line"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about reveal" id="about">
+        <div class="section-label">// About</div>
+        <h2 class="section-title">The Studio</h2>
+        <p class="about-text">
+            <strong>Simplex Development</strong> is a solo indie game studio building experiences on Roblox. We focus on polished, personality-driven games with tight loops and weird energy. Every game is designed to be free-to-play, fair, and impossible to put down.
+        </p>
+    </section>
+
+    <!-- GAMES -->
+    <section class="games reveal" id="games">
+        <div class="section-label">// Games</div>
+        <h2 class="section-title">Our Projects</h2>
+
+        <a href="https://www.roblox.com/games/9941269650/" target="_blank" rel="noopener" class="game-card">
+            <div class="game-card-header">
+                <div class="game-card-info">
+                    <h3>CURSED CAST <span class="emoji">🚽</span></h3>
+                    <div class="game-card-tags">
+                        <span class="tag live">RNG</span>
+                        <span class="tag">Fishing</span>
+                        <span class="tag">Auras</span>
+                        <span class="tag">Simulator</span>
+                    </div>
+                </div>
+                <div class="game-card-status">In Development</div>
+            </div>
+            <p class="game-card-desc">
+                Cast your line into the cursed sewers and reel in the rarest turds ever flushed. 12 rarity tiers, stunning aura VFX, daily quests from GURGLES, and catches so rare the whole server will know your name.
+            </p>
+            <div class="game-card-footer">
+                <span>Play on Roblox →</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+    </section>
+
+    <!-- CONNECT -->
+    <section class="connect reveal" id="connect">
+        <div class="section-label">// Connect</div>
+        <h2 class="section-title">Find Us</h2>
+
+        <div class="connect-grid">
+            <a href="https://www.roblox.com/communities/363697433/Simplexity-Development" target="_blank" rel="noopener" class="connect-link">
+                <div class="connect-icon roblox">▶</div>
+                <div>
+                    <div class="connect-label">Roblox Group</div>
+                    <div class="connect-sub">Join for Auto Cast</div>
+                </div>
+            </a>
+
+            <a href="mailto:contact@simplexdev.dev" class="connect-link">
+                <div class="connect-icon email">@</div>
+                <div>
+                    <div class="connect-label">Email</div>
+                    <div class="connect-sub">contact@simplexdev.dev</div>
+                </div>
+            </a>
+
+            <a href="#" class="connect-link">
+                <div class="connect-icon discord">◆</div>
+                <div>
+                    <div class="connect-label">Discord</div>
+                    <div class="connect-sub">Coming soon</div>
+                </div>
+            </a>
+
+            <a href="#" class="connect-link">
+                <div class="connect-icon twitter">𝕏</div>
+                <div>
+                    <div class="connect-label">Twitter / X</div>
+                    <div class="connect-sub">Coming soon</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="footer-text">© 2026 Simplex Development <span class="green">·</span> simplexdev.dev</p>
+    </footer>
+
+</div>
+
+<script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
